@@ -3,6 +3,7 @@ package com.rossevineartha.pointofsale_project2;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +23,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.rossevineartha.pointofsale_project2.Adapter.UserAdapter;
+import com.rossevineartha.pointofsale_project2.Adapter.BarangAdapter;
+import com.rossevineartha.pointofsale_project2.Fragment.BarangFragment;
+import com.rossevineartha.pointofsale_project2.Fragment.UserFragment;
+import com.rossevineartha.pointofsale_project2.Recycler.RecyclerBarangs;
+import com.rossevineartha.pointofsale_project2.Recycler.RecyclerUsers;
+
+import com.rossevineartha.pointofsale_project2.Entity.Barang;
 import com.rossevineartha.pointofsale_project2.Entity.User;
 
 import java.util.ArrayList;
@@ -31,21 +38,36 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, UserAdapter.UserDataListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     User user;
-    private DatabaseReference databaseUser;
-    private UserAdapter userAdapter;
-    private ArrayList<User> users;
+
     @BindView(R.id.recyclerView_User)
     RecyclerView recyclerUsers;
+    ///Barang
+    private DatabaseReference databaseBarang;
+    private DatabaseReference databaseUsers;
+    private BarangAdapter barangAdapter;
 
-    public UserAdapter getUserAdapter() {
-        if (userAdapter == null) {
-            userAdapter = new UserAdapter();
-            userAdapter.setUserDataListener(this);
-        }
-        return userAdapter;
+    FragmentTransaction transaction;
+
+    String keyUser;
+    String keyBarang;
+
+    public String getKeyUser() {
+        return keyUser;
+    }
+
+    public void setKeyUser(String keyUser) {
+        this.keyUser = keyUser;
+    }
+
+    public String getKeyBarang() {
+        return keyBarang;
+    }
+
+    public void setKeyBarang(String keyBarang) {
+        this.keyBarang = keyBarang;
     }
 
     @Override
@@ -76,46 +98,24 @@ public class MainActivity extends AppCompatActivity
 
         View headerView = navigationView.getHeaderView(0);
 
-        users = new ArrayList<>();
-        ButterKnife.bind(this);
-        user = getIntent().getParcelableExtra("userYgLogin");
-//
-//        TextView txtName_nav = (TextView) headerView.findViewById(R.id.txtNama_NavHeaderMain);
-//        txtName_nav.setText(user.getNamaUser());
-//        TextView txtUsername_nav = (TextView) headerView.findViewById(R.id.txtUsername_LoginActivity);
-//        txtUsername_nav.setText(user.getUsername());
+        transaction = getSupportFragmentManager().beginTransaction();
 
-//RECYCLE VIEW
+        ButterKnife.bind(this);
+
+        user = getIntent().getParcelableExtra("userYgLogin");
+        databaseUsers = FirebaseDatabase.getInstance().getReference("User");
+
+        databaseBarang = FirebaseDatabase.getInstance().getReference("Barang");
+
+
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         DividerItemDecoration did = new DividerItemDecoration(this, linearLayoutManager.getOrientation());
         recyclerUsers.setLayoutManager(linearLayoutManager);
         recyclerUsers.addItemDecoration(did);
-        recyclerUsers.setAdapter(getUserAdapter());
-        populateData();
-    }
-
-    private void populateData() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        databaseUser = database.getReference();
-        databaseUser.child("User").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot noteDataSnapshot : dataSnapshot.getChildren()) {
-                    User user = new User();
-                    user = noteDataSnapshot.getValue(User.class);
-                    System.out.println(user.toString());
-                    users.add(user);
-                }
-                getUserAdapter().setUserArrayList(users);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println(databaseError.getDetails() + " " + databaseError.getMessage());
-            }
-        });
 
     }
+
 
     @Override
     public void onBackPressed() {
@@ -160,13 +160,43 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
+
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_barang) {
 
-        } else if (id == R.id.nav_send) {
+            RecyclerBarangs recycler = new RecyclerBarangs(databaseBarang);
+            recyclerUsers.setAdapter(recycler.getBarangAdapter());
+            recycler.setMainActivity(this);
+
+
+
+            BarangFragment fragment = new BarangFragment();
+            transaction = getSupportFragmentManager().beginTransaction();
+            fragment.mainActivity = this;
+            transaction.replace(R.id.fragment_form_main, fragment);
+            transaction.commit();
+
+
+
+
+        } else if (id == R.id.nav_user) {
+            RecyclerUsers recycler = new RecyclerUsers(databaseUsers);
+            System.out.println("key user di MAIn" + keyUser);
+            recyclerUsers.setAdapter(recycler.getUserAdapter());
+            recycler.setMainActivity(this);
+
+            UserFragment fragment = new UserFragment();
+            fragment.mainActivity=this;
+            transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_form_main, fragment);
+            transaction.commit();
+
+            //
+
+
 
         }
 
@@ -176,9 +206,27 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    public void tableSelectedUser(User user) {
+        transaction = getSupportFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("cek", user);
 
-    @Override
-    public void onUserDataClicked(User user) {
+        UserFragment fragment = new UserFragment();
+        System.out.println("kosong ga ya"+ this.keyUser);
+        bundle.putString("keyUser", keyUser);
+        fragment.setArguments(bundle);
+        transaction.replace(R.id.fragment_form_main, fragment);
+        transaction.commit();
+    }
 
+    public void tableSelectedBarang(Barang barang) {
+        transaction = getSupportFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("selectedBarang", barang);
+        bundle.putString("keyBarang",keyBarang);
+        BarangFragment fragment = new BarangFragment();
+        fragment.setArguments(bundle);
+        transaction.replace(R.id.fragment_form_main, fragment);
+        transaction.commit();
     }
 }

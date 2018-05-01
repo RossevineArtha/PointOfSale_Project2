@@ -11,4 +11,15 @@
     <string name="ktPassword">Password</string>
     <string name="ktUsername">Username</string>
     <string name="userYgLogin">user Yg Login</string>
+    <string name="ktuser">User</string>
+    <string name="ktBarang">Barang</string>
+    <string name="ktNama">Nama</string>
+    <string name="ktAlamat">Alamat</string>
+    <string name="ktNoTelp">Nomor Telepon</string>
+    <string name="ktKasir">Kasir</string>
+    <string name="ktNamaBarang">Nama Barang</string>
+    <string name="ktHargaBeli">Harga Beli</string>
+    <string name="ktHargaJual">Harga Jual</string>
+    <string name="ktStock">Stock</string>
+    <string name="parcel_user">Parcel user</string>
 </resources>

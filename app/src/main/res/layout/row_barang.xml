@@ -11,7 +11,7 @@
 
 
         <TextView
-            android:id="@+id/txtID_user_rowUser"
+            android:id="@+id/txtID_barang_rowbarang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
@@ -20,7 +20,7 @@
             android:textAlignment="center" />
 
         <TextView
-            android:id="@+id/txtNama_user_rowUser"
+            android:id="@+id/txtNama_barang_rowbarang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -28,7 +28,7 @@
             android:textAlignment="center" />
 
         <TextView
-            android:id="@+id/txtUsername_user_rowUser"
+            android:id="@+id/txtHargaBeli_barang_rowbarang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -36,7 +36,7 @@
             android:textAlignment="center" />
 
         <TextView
-            android:id="@+id/txtNoTlp_user_rowUser"
+            android:id="@+id/txtHargaJual_barang_rowbarang"
             android:layout_width="wrap_content"
 
             android:layout_height="wrap_content"
@@ -46,21 +46,14 @@
 
 
         <TextView
-            android:id="@+id/txtAlamat_user_rowUser"
+            android:id="@+id/txtStock_barang_rowbarang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/ktUsername"
             android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/txtAdmin_user_rowUser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin"
-            android:layout_weight="1"
-            android:text="@string/ktUsername"
-            android:textAlignment="center" />
+
     </LinearLayout>
 
 

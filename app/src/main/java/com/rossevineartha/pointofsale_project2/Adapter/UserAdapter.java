@@ -43,25 +43,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.user_tampilan_data, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.row_user, parent, false);
         return new UserViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
-        System.out.println(getUserArrayList().size());
         final User user = getUserArrayList().get(position);
 
-        String id = user.getIdUser();
-        String name = user.getNamaUser();
-        String username = user.getUsername();
-        String alamat = user.getAlamatUser();
-        int admin = user.getAdmin();
-
-
-        holder.txtid.setText(id);
-//        holder.txtNama.setText(name);
-//        holder.txtUsername.setText(username);
+        holder.txtid.setText(user.getIdUser());
+        holder.txtNama.setText(user.getNamaUser());
+        holder.txtUsername.setText(user.getUsername());
+        holder.txtAlamat.setText(user.getAlamatUser());
+        holder.txtNoTlp.setText(user.getNoTelpUser());
+        holder.txtAdmin.setText(String.valueOf(user.getAdmin()));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,13 +73,21 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     class UserViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.textView_ID)
+        @BindView(R.id.txtID_user_rowUser)
         TextView txtid;
-
+        @BindView(R.id.txtNama_user_rowUser)
+        TextView txtNama;
+        @BindView(R.id.txtUsername_user_rowUser)
+        TextView txtUsername;
+        @BindView(R.id.txtAlamat_user_rowUser)
+        TextView txtAlamat;
+        @BindView(R.id.txtNoTlp_user_rowUser)
+        TextView txtNoTlp;
+        @BindView(R.id.txtAdmin_user_rowUser)
+        TextView txtAdmin;
         public UserViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(itemView);
-
+            ButterKnife.bind(this,itemView);
         }
 
 
